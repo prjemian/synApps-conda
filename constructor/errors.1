@@ -1,0 +1,16 @@
+6.2
+/opt/conda/bin/x86_64-conda-linux-gnu-gcc  -D_GNU_SOURCE -D_DEFAULT_SOURCE         -DUSE_TYPED_RSET -DUSE_TYPED_DSET -DUSE_TYPED_DRVET -DBUILDING_asyn_API  -D_X86_64_ -DUNIX  -Dlinux      -O3 -g   -Wall -Werror-implicit-function-declaration    -DUSE_TYPED_RSET -DUSE_TYPED_DSET -DUSE_TYPED_DRVET -DHAVE_LSREC -DHAVE_DEVINT64  -mtune=generic     -m64 -fPIC -I. -I../O.Common -I. -I. -I../../asyn/drvAsynSerial/os/Linux -I../../asyn/drvAsynSerial/os/default -I.. -I../../asyn/asynDriver -I../../asyn/asynGpib -I../../asyn/drvAsynSerial -I../../asyn/interfaces -I../../asyn/miscellaneous -I../../asyn/asynPortDriver/exceptions -I../../asyn/asynPortDriver -I../../asyn/asynPortClient -I../../asyn/devEpics -I../../asyn/asynRecord -I../../asyn/vxi11 -I../../asyn/gsIP488 -I../../asyn/ni1014 -I../../asyn/devGpib -I../../include/compiler/gcc -I../../include/os/Linux -I../../include      -I/home/mambauser/synApps/support/ipac-2-16/include   -I/home/mambauser/synApps/support/seq-2-2-8/include -I/opt/conda/epics/include/compiler/gcc -I/opt/conda/epics/include/os/Linux -I/opt/conda/epics/include      -I/opt/conda/include  -c ../../asyn/asynRecord/drvAsyn.c
+Installing created dbd file ../../dbd/devEpics.dbd
+../../asyn/asynRecord/asynRecord.c: In function 'reportError':
+../../asyn/asynRecord/asynRecord.c:2041:5: warning: '__builtin_strncpy' output may be truncated copying 100 bytes from a string of length 100 [-Wstringop-truncation]
+ 2041 |     strncpy(pasynRec->errs, buffer, ERR_SIZE);
+      |     ^~~~~~~
+
+
+6.2.1
+/opt/conda/bin/x86_64-conda-linux-gnu-gcc  -D_GNU_SOURCE -D_DEFAULT_SOURCE         -DUSE_TYPED_RSET -DUSE_TYPED_DSET -DUSE_TYPED_DRVET -DBUILDING_asyn_API  -D_X86_64_ -DUNIX  -Dlinux      -O3 -g   -Wall -Werror-implicit-function-declaration    -DUSE_TYPED_RSET -DUSE_TYPED_DSET -DUSE_TYPED_DRVET -DHAVE_LSREC -DHAVE_DEVINT64  -mtune=generic     -m64 -fPIC -I. -I../O.Common -I. -I. -I../../asyn/drvAsynSerial/os/Linux -I../../asyn/drvAsynSerial/os/default -I.. -I../../asyn/asynDriver -I../../asyn/asynGpib -I../../asyn/drvAsynSerial -I../../asyn/interfaces -I../../asyn/miscellaneous -I../../asyn/asynPortDriver/exceptions -I../../asyn/asynPortDriver -I../../asyn/asynPortClient -I../../asyn/devEpics -I../../asyn/asynRecord -I../../asyn/vxi11 -I../../asyn/drvPrologixGPIB -I../../asyn/gsIP488 -I../../asyn/ni1014 -I../../asyn/devGpib -I../../include/compiler/gcc -I../../include/os/Linux -I../../include      -I/home/mambauser/synApps/support/ipac-2-16/include   -I/home/mambauser/synApps/support/seq-2-2-9/include -I/opt/conda/epics/include/compiler/gcc -I/opt/conda/epics/include/os/Linux -I/opt/conda/epics/include      -I/opt/conda/include  -c ../../asyn/asynRecord/drvAsyn.c
+Installing created dbd file ../../dbd/devEpics.dbd
+../../asyn/asynRecord/asynRecord.c: In function 'reportError':
+../../asyn/asynRecord/asynRecord.c:2045:9: warning: '__builtin_strncpy' specified bound 100 equals destination size [-Wstringop-truncation]
+ 2045 |         strncpy(pasynRecPvt->old.errs, pasynRec->errs, ERR_SIZE);
+      |         ^~~~~~~

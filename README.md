@@ -1,4 +1,4 @@
-# My EPICS IOCs
+# synApps-conda
 
 Build synApps into a conda package.
 
@@ -14,7 +14,7 @@ NOTE: 2022-09-26 work-in-progress
 
 CONTENTS
 
-- [My EPICS IOCs](#my-epics-iocs)
+- [synApps-conda](#synapps-conda)
   - [Algorithms](#algorithms)
   - [Extract from containers](#extract-from-containers)
     - [Algorithm](#algorithm)

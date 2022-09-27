@@ -1,0 +1,23 @@
+FROM  ubuntu:latest
+LABEL version="2.0.0" \
+      maintainer="prjemian <prjemian@gmail.com>" \
+      lastupdate="2022-09-25"
+USER  root
+WORKDIR /home
+
+# Install necessary libraries from offical repo
+RUN apt-get update  -y && \
+    apt-get upgrade -y && \
+    apt-get install -y  \
+        nano  \
+        && \
+    rm -rf /var/lib/apt/lists/*
+        # build-essential  \
+        # libreadline-dev  \
+        # screen \
+        # vim \
+
+# additional software packages added here
+ENV APP_ROOT="/opt"
+# for use with `crontab -e`
+ENV EDITOR="nano"

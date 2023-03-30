@@ -25,9 +25,6 @@ sed -i s:'#iocshLoad("$(MOTOR)/modules/motorMotorSim/iocsh/motorSim.iocsh"':'ioc
 sed -i s:'LOW_LIM=':'HIGH_LIM=32000, LOW_LIM=':g ./motors.iocsh
 sed -i s:'NUM_AXES=16':'NUM_AXES=56':g ./motors.iocsh
 
-# https://github.com/prjemian/epics-docker/issues/24
-patch "${MOTOR}/db/asyn_motor.db" "/opt/asyn_motor.db.diffs"
-
 # re-write the substitutions file for 56 motors (easier than modifying it)
 export SUBFILE=./substitutions/motorSim.substitutions
 echo file \"\$\(MOTOR\)/db/asyn_motor.db\"  > "${SUBFILE}"
@@ -91,8 +88,8 @@ echo "# monochromator"  >> ./optics.iocsh
 echo iocshLoad\(\"\$\(OPTICS\)/iocsh/kohzu_mono.iocsh\", \"PREFIX=\$\(PREFIX\), M_THETA=m45,M_Y=m46,M_Z=m47, YOFF_LO=17.4999,YOFF_HI=17.5001, GEOM=1, LOG=kohzuCtl.log\"\)  >> ./optics.iocsh
 
 # slits: m41 - m44
-sed -i s/'Slit1V:,mXp=m3,mXn=m4'/'Slit1V,mXp=m41,mXn=m42'/g   ./optics.iocsh
-sed -i s/'Slit1H:,mXp=m5,mXn=m6'/'Slit1H,mXp=m43,mXn=m44'/g   ./optics.iocsh
+sed -i s/'Slit1V,mXp=m3,mXn=m4'/'Slit1V,mXp=m41,mXn=m42'/g   ./optics.iocsh
+sed -i s/'Slit1H,mXp=m5,mXn=m6'/'Slit1H,mXp=m43,mXn=m44'/g   ./optics.iocsh
 
 # optical table: m35 - m40
 sed -i s/',T=table1,M0X=m1,M0Y=m2,M1Y=m3,M2X=m4,M2Y=m5,M2Z=m6'/',T=table1,M0X=m35,M0Y=m36,M1Y=m37,M2X=m38,M2Y=m39,M2Z=m40'/g   ./optics.iocsh

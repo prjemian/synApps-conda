@@ -1,7 +1,7 @@
 FROM  ubuntu:latest
 LABEL version="2.0.0" \
       maintainer="prjemian <prjemian@gmail.com>" \
-      lastupdate="2022-09-26" \
+      lastupdate="2023-03-30" \
       Description="source: https://github.com/prjemian/epics-docker/"
 USER  root
 WORKDIR /home
@@ -31,8 +31,9 @@ RUN echo "# -------------------------------- end OS install"
 
 
 RUN echo "# -------------------------------- start EPICS base"
-# Get the latest version of EPICS
-ENV BASE_VERSION=7.0.7
+# Pick the version of EPICS
+# ENV BASE_VERSION=7.0.7
+ENV BASE_VERSION=7.0.5
 ENV EPICS_BASE_NAME=base-${BASE_VERSION}
 ENV EPICS_BASE="${APP_ROOT}/${EPICS_BASE_NAME}"
 
@@ -55,7 +56,7 @@ RUN make -j4 all CFLAGS="-fPIC" CXXFLAGS="-fPIC"  2>&1 | tee ${LOG_DIR}/build-ba
 RUN echo "# --- make clean ---" 2>&1 | tee -a ${LOG_DIR}/build-base.log
 RUN make clean  2>&1 | tee -a ${LOG_DIR}/build-base.log
 
-COPY ioc_files/* /opt/softIoc_base_demo/
+# COPY ./ioc_files/* /opt/softIoc_base_demo/
 CMD ["/bin/bash"]
 
 WORKDIR ${EPICS_BASE}
@@ -113,8 +114,8 @@ RUN pwd && ls -lAFh
 ENV HASH=R6-2-1
 ADD https://raw.githubusercontent.com/EPICS-synApps/support/${HASH}/assemble_synApps.sh ./
 # edit the script first!
-COPY ./ioc_files/* ./
-RUN bash ./edit_assemble_synApps.sh 2>&1 | tee ${LOG_DIR}/edit_assemble.log
+COPY ./ioc_files/edit_assemble_synApps.sh /opt
+RUN bash ${APP_ROOT}/edit_assemble_synApps.sh 2>&1 | tee ${LOG_DIR}/edit_assemble.log
 # done editing
 # review
 RUN cat ./assemble_synApps.sh
@@ -139,23 +140,167 @@ RUN echo "# -------------------------------- end build synApps"
 
 RUN echo "# -------------------------------- start copy screens"
 # copy all the MEDM/CSSBOY/caQtDM/... screens to /home/$MAMBA_USER/screens
+COPY ./ioc_files/copy_screens.sh /opt
+COPY ./ioc_files/modify_adl_in_ui_files.sh /opt
 RUN bash ${APP_ROOT}/copy_screens.sh ${SUPPORT} ${APP_ROOT}/screens | tee -a ${LOG_DIR}/copy_screens.log
 # use this script in all IOCs
 RUN bash ${APP_ROOT}/modify_adl_in_ui_files.sh  ${APP_ROOT}/screens/ui | tee -a ${LOG_DIR}/modify_adl_in_ui_files.log
 RUN echo "# -------------------------------- end copy screens"
 
+# FIXME: make -C $XXX rebuild
+# dbdExpand.pl: Can't find file 'stdSupport.dbd'
+#   while reading 'stdSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/stdSupport.dbd
+# dbdExpand.pl: Can't find file 'scalerSupport.dbd'
+#   while reading 'scalerSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/scalerSupport.dbd
+# dbdExpand.pl: Can't find file 'busySupport.dbd'
+#   while reading 'busySupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/busySupport.dbd
+# dbdExpand.pl: Can't find file 'opticsSupport.dbd'
+#   while reading 'opticsSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/opticsSupport.dbd
+# dbdExpand.pl: Can't find file 'mcaSupport.dbd'
+#   while reading 'mcaSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/mcaSupport.dbd
+# dbdExpand.pl: Can't find file 'ipSupport.dbd'
+#   while reading 'ipSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/ipSupport.dbd
+# dbdExpand.pl: Can't find file 'luaSupport.dbd'
+#   while reading 'luaSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/luaSupport.dbd
+# dbdExpand.pl: Can't find file 'modbusSupport.dbd'
+#   while reading 'modbusSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/modbusSupport.dbd
+# dbdExpand.pl: Can't find file 'motorSupport.dbd'
+#   while reading 'motorSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/motorSupport.dbd
+# dbdExpand.pl: Can't find file 'devAcsMotor.dbd'
+#   while reading 'devAcsMotor.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devAcsMotor.dbd
+# dbdExpand.pl: Can't find file 'devAerotech.dbd'
+#   while reading 'devAerotech.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devAerotech.dbd
+# dbdExpand.pl: Can't find file 'devAttocube.dbd'
+#   while reading 'devAttocube.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devAttocube.dbd
+# dbdExpand.pl: Can't find file 'devFaulhaberMotor.dbd'
+#   while reading 'devFaulhaberMotor.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devFaulhaberMotor.dbd
+# dbdExpand.pl: Can't find file 'devImsMotor.dbd'
+#   while reading 'devImsMotor.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devImsMotor.dbd
+# dbdExpand.pl: Can't find file 'devKohzuMotor.dbd'
+#   while reading 'devKohzuMotor.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devKohzuMotor.dbd
+# dbdExpand.pl: Can't find file 'devMclennanMotor.dbd'
+#   while reading 'devMclennanMotor.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devMclennanMotor.dbd
+# dbdExpand.pl: Can't find file 'devMicos.dbd'
+#   while reading 'devMicos.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devMicos.dbd
+# dbdExpand.pl: Can't find file 'devMicroMo.dbd'
+#   while reading 'devMicroMo.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devMicroMo.dbd
+# dbdExpand.pl: Can't find file 'devNewFocus.dbd'
+#   while reading 'devNewFocus.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devNewFocus.dbd
+# dbdExpand.pl: Can't find file 'devNewport.dbd'
+#   while reading 'devNewport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devNewport.dbd
+# dbdExpand.pl: Can't find file 'devAerotechSeq.dbd'
+#   while reading 'devAerotechSeq.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devAerotechSeq.dbd
+# dbdExpand.pl: Can't find file 'devNewportSeq.dbd'
+#   while reading 'devNewportSeq.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devNewportSeq.dbd
+# dbdExpand.pl: Can't find file 'devOriel.dbd'
+#   while reading 'devOriel.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devOriel.dbd
+# dbdExpand.pl: Can't find file 'devPC6K.dbd'
+#   while reading 'devPC6K.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devPC6K.dbd
+# dbdExpand.pl: Can't find file 'devPIJena.dbd'
+#   while reading 'devPIJena.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devPIJena.dbd
+# dbdExpand.pl: Can't find file 'devPIMotor.dbd'
+#   while reading 'devPIMotor.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devPIMotor.dbd
+# dbdExpand.pl: Can't find file 'devSPiiPlus.dbd'
+#   while reading 'devSPiiPlus.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devSPiiPlus.dbd
+# dbdExpand.pl: Can't find file 'devSmartMotorMotor.dbd'
+#   while reading 'devSmartMotorMotor.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devSmartMotorMotor.dbd
+# dbdExpand.pl: Can't find file 'devSoftMotor.dbd'
+#   while reading 'devSoftMotor.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devSoftMotor.dbd
+# dbdExpand.pl: Can't find file 'devThorLabs.dbd'
+#   while reading 'devThorLabs.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/devThorLabs.dbd
+# dbdExpand.pl: Can't find file 'motorSimSupport.dbd'
+#   while reading 'motorSimSupport.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/motorSimSupport.dbd
+# dbdExpand.pl: Can't find file 'stream.dbd'
+#   while reading 'stream.dbd' to create 'iocxxxLinux.dbd'
+#   Your Makefile may need this dependency rule:
+#     $(COMMON_DIR)/iocxxxLinux.dbd: $(COMMON_DIR)/stream.dbd
 
-RUN echo "# -------------------------------- start customize xxx"
-# TODO: duplicate the xxx module and work there
-RUN mv ${APP_ROOT}/general_purpose.db ${IOCXXX}/substitutions
-      
-RUN ${APP_ROOT}/customize_xxx.sh && pwd
-RUN bash ${APP_ROOT}/copy_screens.sh ${SUPPORT} ${APP_ROOT}/screens | tee -a ${LOG_DIR}/copy_screens.log
-RUN bash ${APP_ROOT}/modify_adl_in_ui_files.sh  ${APP_ROOT}/screens/ui | tee -a ${LOG_DIR}/modify_adl_in_ui_files.log
 
-# archive the template IOC, for making new XXX IOCs
-WORKDIR ${SUPPORT}
-RUN \
-    pwd && ls -lAFgh && \
-    tar czf ${APP_ROOT}/$(basename ${XXX}).tar.gz $(basename ${XXX})
-RUN echo "# -------------------------------- end customize xxx"
+# RUN echo "# -------------------------------- start customize xxx"
+# # TODO: duplicate the xxx module and work there
+# COPY ./ioc_files/customize_xxx.sh /opt
+# COPY ./ioc_files/general_purpose.db /opt
+# # COPY ./ioc_files/asyn_motor.db.diffs /opt
+# RUN mv ${APP_ROOT}/general_purpose.db ${IOCXXX}/substitutions
+# ENV MOTOR=${SUPPORT}/motor-${MOTOR_HASH}
+
+# RUN ${APP_ROOT}/customize_xxx.sh && pwd
+# RUN \
+#     bash \
+#         ${APP_ROOT}/copy_screens.sh ${SUPPORT} ${APP_ROOT}/screens \
+#         | tee -a ${LOG_DIR}/copy_screens.log
+# RUN \
+#     bash ${APP_ROOT}/modify_adl_in_ui_files.sh ${APP_ROOT}/screens/ui \
+#     | tee -a ${LOG_DIR}/modify_adl_in_ui_files.log
+
+# # archive the template IOC, for making new XXX IOCs
+# WORKDIR ${SUPPORT}
+# RUN \
+#     pwd \
+#     && ls -lAFgh \
+#     && tar czf ${APP_ROOT}/$(basename ${XXX}).tar.gz \
+#         --exclude-vcs \
+#         $(basename ${XXX})
+# RUN echo "# -------------------------------- end customize xxx"

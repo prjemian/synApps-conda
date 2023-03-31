@@ -77,21 +77,23 @@ for mod in "STREAM"; do
   eval ${cmd}
 done
 
-# sed -i \
-#   s:'update ADSimDetector':'update ADSimDetector\ngit submodule update ADURL':g \
-#   assemble_synApps.sh
-# FIXME: sed -i s:'#ADURL':'ADURL':g RELEASE.local
-# sed -i \
-#   s:'building ADSimDetector':'building ADSimDetector\n_FIXME_NEW_SED_COMMAND_HERE_':g \
-#   assemble_synApps.sh
+# area detector ADURL
+sed -i \
+  s:'update ADSimDetector':'update ADSimDetector\ngit submodule update ADURL':g \
+  assemble_synApps.sh
+REPLACE="sed -i s^'#ADURL'^'ADURL'^g RELEASE.local"
+sed -i \
+  "s:building ADSimDetector:building ADSimDetector\n$REPLACE:g" \
+  assemble_synApps.sh
 
-# sed -i \
-#   s:'update ADSimDetector':'update ADSimDetector\ngit submodule update pvaDriver':g \
-#   assemble_synApps.sh
-# FIXME: sed -i s:'#PVADRIVER':'PVADRIVER':g RELEASE.local
-# sed -i \
-#   s:'building ADSimDetector':'building ADSimDetector\n_FIXME_NEW_SED_COMMAND_HERE_':g \
-#   assemble_synApps.sh
+# area detector pvaDriver
+sed -i \
+  s:'update ADURL':'update ADURL\ngit submodule update pvaDriver':g \
+  assemble_synApps.sh
+REPLACE="sed -i s^'#PVADRIVER'^'PVADRIVER'^g RELEASE.local"
+sed -i \
+  "s:building ADSimDetector:building ADSimDetector\n$REPLACE:g" \
+  assemble_synApps.sh
 
 # TODO:
 # FFMPEGSERVER=$(AREA_DETECTOR)/ffmpegServer

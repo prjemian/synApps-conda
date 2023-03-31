@@ -15,18 +15,19 @@ export MOTOR_HASH=R7-2-2
 export XXX=${SUPPORT}/xxx-R6-2-1
 export IOCXXX=${XXX}/iocBoot/iocxxx
 
+# update ~/.bash_aliases
 cat >> "${HOME}/.bash_aliases"  << EOF
 #
 # epics_synapps.sh
-export SYNAPPS="${APP_ROOT}/synApps"
-export SUPPORT="${SYNAPPS}/support"
-export PATH="${PATH}:${SUPPORT}/utils"
-export CAPUTRECORDER_HASH=master
-export MOTOR_HASH=R7-2-2
-# export AD=${SUPPORT}/areaDetector-master
-# export MOTOR=${SUPPORT}/motor-${MOTOR_HASH}
-export XXX=${SUPPORT}/xxx-R6-2-1
-export IOCXXX=${XXX}/iocBoot/iocxxx
+export SYNAPPS="${SYNAPPS}"
+export SUPPORT="${SUPPORT}"
+export PATH="${PATH}"
+export CAPUTRECORDER_HASH="${CAPUTRECORDER_HASH}"
+export MOTOR_HASH="${CAPUTRECORDER_HASH}"
+# export AD="${AD}"
+# export MOTOR="${MOTOR}"
+export XXX="${XXX}"
+export IOCXXX="${IOCXXX}"
 EOF
 
 source "${HOME}/.bash_aliases"
@@ -58,9 +59,13 @@ bash \
 
 echo "# ................................ build synApps" 2>&1 | tee -a "${LOG_FILE}"
 cd ${SUPPORT}
-cat >> "${HOME}/.bash_aliases"  << EOF
 export ASYN="${SUPPORT}/$(ls | grep asyn)"
+
+# update ~/.bash_aliases
+cat >> "${HOME}/.bash_aliases"  << EOF
+export ASYN="${ASYN}"
 EOF
+
 source "${HOME}/.bash_aliases"
 CPUs=$(grep "^cpu cores" /proc/cpuinfo | uniq | awk '{print $4}')
 echo "TIRPC=YES" > "${ASYN}/configure/CONFIG_SITE.local"

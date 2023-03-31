@@ -7,12 +7,13 @@ export BASE_VERSION=7.0.5
 export EPICS_BASE_NAME=base-${BASE_VERSION}
 export EPICS_BASE="${APP_ROOT}/${EPICS_BASE_NAME}"
 
+# update ~/.bash_aliases
 cat >> "${HOME}/.bash_aliases"  << EOF
 #
 # epics_base.sh
-export BASE_VERSION=7.0.5
-export EPICS_BASE_NAME=base-${BASE_VERSION}
-export EPICS_BASE="${APP_ROOT}/${EPICS_BASE_NAME}"
+export BASE_VERSION="${BASE_VERSION}"
+export EPICS_BASE_NAME="${EPICS_BASE_NAME}"
+export EPICS_BASE="${EPICS_BASE}"
 EOF
 
 source "${HOME}/.bash_aliases"
@@ -35,9 +36,10 @@ tar xzf ${EPICS_BASE_NAME}.tar.gz &&\
 export EPICS_HOST_ARCH="$(${EPICS_BASE}/startup/EpicsHostArch)"
 export PATH="${PATH}:${EPICS_BASE}/bin/${EPICS_HOST_ARCH}"
 
+# update ~/.bash_aliases
 cat >> "${HOME}/.bash_aliases"  << EOF
-export EPICS_HOST_ARCH="$(${EPICS_BASE}/startup/EpicsHostArch)"
-export PATH="${PATH}:${EPICS_BASE}/bin/${EPICS_HOST_ARCH}"
+export EPICS_HOST_ARCH="${EPICS_HOST_ARCH}"
+export PATH="${PATH}"
 EOF
 
 echo "environment:\n$(env | sort)"

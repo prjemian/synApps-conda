@@ -55,6 +55,7 @@ COPY ./resources/edit_assemble_synApps.sh "${RESOURCES}/"
 RUN "${RESOURCES}/epics_synapps.sh"
 RUN echo "# -------------------------------- end EPICS synApps"
 
+# TODO: collect the screen files
 # TODO: add custom support for custom (GP) IOC
 # TODO: add custom support for custom ADSimDetector IOC
 # TODO: add custom support for custom pvaDriver IOC

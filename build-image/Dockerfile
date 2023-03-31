@@ -50,8 +50,12 @@ RUN "${RESOURCES}/epics_base.sh"
 RUN echo "# -------------------------------- end EPICS base"
 
 RUN echo "# -------------------------------- start EPICS synApps"
-# COPY ./resources/edit_assemble_synApps.sh "${RESOURCES}/"
 COPY ./resources/epics_synapps.sh "${RESOURCES}/"
 COPY ./resources/edit_assemble_synApps.sh "${RESOURCES}/"
 RUN "${RESOURCES}/epics_synapps.sh"
 RUN echo "# -------------------------------- end EPICS synApps"
+
+# TODO: add custom support for custom (GP) IOC
+# TODO: add custom support for custom ADSimDetector IOC
+# TODO: add custom support for custom pvaDriver IOC
+# TODO: add custom support for custom ADURL IOC

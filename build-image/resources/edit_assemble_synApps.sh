@@ -10,7 +10,6 @@ sed -i s:'^EPICS_BASE=':"EPICS_BASE=$EPICS_BASE\n#EPICS_BASE=":g assemble_synApp
 _MODULES_=""
 _MODULES_+=" ALIVE"
 _MODULES_+=" ALLENBRADLEY"
-_MODULES_+=" AREA_DETECTOR"
 _MODULES_+=" CAMAC"
 _MODULES_+=" DAC128V"
 _MODULES_+=" DELAYGEN"
@@ -38,6 +37,7 @@ done
 # use these modules from their GitHub master branch(es)
 
 _MODULES_=""
+_MODULES_+=" AREA_DETECTOR"
 _MODULES_+=" ASYN"
 _MODULES_+=" AUTOSAVE"
 _MODULES_+=" BUSY"
@@ -77,4 +77,22 @@ for mod in "STREAM"; do
   eval ${cmd}
 done
 
-# sed -i s:'git submodule update ADSimDetector':'git submodule update ADSimDetector\ngit submodule update ADURL\ngit submodule update pvaDriver':g assemble_synApps.sh
+# sed -i \
+#   s:'update ADSimDetector':'update ADSimDetector\ngit submodule update ADURL':g \
+#   assemble_synApps.sh
+# FIXME: sed -i s:'#ADURL':'ADURL':g RELEASE.local
+# sed -i \
+#   s:'building ADSimDetector':'building ADSimDetector\n_FIXME_NEW_SED_COMMAND_HERE_':g \
+#   assemble_synApps.sh
+
+# sed -i \
+#   s:'update ADSimDetector':'update ADSimDetector\ngit submodule update pvaDriver':g \
+#   assemble_synApps.sh
+# FIXME: sed -i s:'#PVADRIVER':'PVADRIVER':g RELEASE.local
+# sed -i \
+#   s:'building ADSimDetector':'building ADSimDetector\n_FIXME_NEW_SED_COMMAND_HERE_':g \
+#   assemble_synApps.sh
+
+# TODO:
+# FFMPEGSERVER=$(AREA_DETECTOR)/ffmpegServer
+# FFMPEGVIEWER=$(AREA_DETECTOR)/ffmpegViewer
